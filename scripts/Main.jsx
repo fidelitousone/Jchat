@@ -1,5 +1,5 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { Content } from './Content';
+import  ChatBox from './ChatBox';
 
-ReactDOM.render(<Content />, document.getElementById('root'));
+ReactDOM.render(<ChatBox />, document.getElementById('root'));

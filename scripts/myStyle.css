@@ -1,0 +1,8 @@
+.ChatBox {
+    background-color: aliceblue;
+    height: 70%;
+    width: 60%;
+    margin: auto;
+    border-radius: 5px;
+    font-family: Arial, Helvetica, sans-serif;
+}
