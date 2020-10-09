@@ -130,3 +130,6 @@ dmypy.json
 
 #VS Code
 .vscode/
+node_modules
+package-lock.json
+static/script.js
