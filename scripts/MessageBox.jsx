@@ -27,7 +27,7 @@ export default function MessageBox() {
     }
     
     return (
-        <form style={{marginLeft: "20%"}} onSubmit={handleSubmit}>
+        <form style={{marginLeft: "27.5%"}} onSubmit={handleSubmit}>
             <input type="text" value={text} onChange={handleChange}></input>
             <button>Send</button>
         </form>

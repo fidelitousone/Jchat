@@ -12,3 +12,11 @@
     margin: 0 5%;
 
 }
+
+.ConnectedUsers {
+    background-color: aliceblue;
+    height: 70%;
+    float: left;
+    width: 15%;
+    border-radius: 5px;
+}
