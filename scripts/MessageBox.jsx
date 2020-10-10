@@ -1,5 +1,6 @@
 import * as React from 'react'
 import './myStyle.css';
+import { Socket } from './Socket'
 
 export default function MessageBox() {
     const [text, setText] = React.useState("");
