@@ -1,4 +1,5 @@
 import * as React from 'react';
+import MessageBox  from './MessageBox';
 import './myStyle.css';
 
 export default function ChatBox() {
