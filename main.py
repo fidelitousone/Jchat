@@ -19,6 +19,18 @@ def on_connect():
         'test': 'Connected'
     })
 
+@socketio.on('new message')
+def new_message(data):
+    message = data["message"]
+    print("Received a message from user.")
+    print(f"Message sent was: {message}")
+    socketio.emit(
+        "message receieved",
+        {
+            "message": message
+        }
+    )
+
 
 if (__name__=="__main__"):
     socketio.run(

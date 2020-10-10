@@ -12,6 +12,14 @@ export default function MessageBox() {
     }
 
     function handleSubmit(event) {
+
+        Socket.emit(
+            "new message",
+            {
+                "message": text
+            }
+        );
+
         console.log(text);
         setText("");
         event.preventDefault();
