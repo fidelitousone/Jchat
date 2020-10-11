@@ -3,13 +3,13 @@ import './myStyle.css';
 import { Socket } from './Socket';
 
 export default function MessageHistory() {
-    const [messageList, setMessage] = React.useState([])
+    const [messageList, setMessage] = React.useState([]);
     function new_messages() {
         React.useEffect(() => {
             Socket.on("message receieved", (data) => {
                 console.log("Server sent a message: " + data["message"]);
                 setMessage(data["messages"]);
-            })
+            });
         }, []);
     }
 
@@ -23,5 +23,5 @@ export default function MessageHistory() {
                 ))}
             </ol>
         </div>
-    )
+    );
 }

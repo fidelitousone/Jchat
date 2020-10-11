@@ -9,12 +9,9 @@ import logging
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
-
 formatter  = logging.Formatter("%(levelname)s:%(name)s:%(message)s")
-
 file_handler = logging.FileHandler("Chat Program.log")
 file_handler.setFormatter(formatter)
-
 logger.addHandler(file_handler)
 
 app = flask.Flask(__name__)
@@ -36,6 +33,8 @@ db = flask_sqlalchemy.SQLAlchemy(app)
 db.app = app
 
 
+
+
 def emit_all_messages(channel):
     logger.debug(f"Emitted a message on channel {channel}")
     all_messages = [ \
@@ -48,6 +47,16 @@ def emit_all_messages(channel):
         }
     
     )
+
+def handle_bot_invoke(string):
+    command = string.split("!! ")[1]
+    logger.debug(f"Bot handler got command: {command}")
+    if (command == "about"):
+        return "Just a simple chat bot, type !! help for some commands."
+    elif (command == "help"):
+        return  "Commands: !! about, !! help"
+    else:
+        return "Unknown command, type !! help for a list of commands."
 
 @app.route("/")
 def index():
@@ -74,8 +83,20 @@ def new_message(data):
     logger.debug("Receieved a new_message event, flask called it.")
     message = data["message"]
     logger.debug(f"The message contained: {message}")
-    db.session.add(models.Messages("User",message))
+    
+
+    
+    db.session.add(models.Messages("User", message))
     db.session.commit()
+    if (message.startswith("!! ")):
+        botstr = message
+        logger.debug("Recognized bot invocation")
+        bot_return = handle_bot_invoke(botstr)
+        logger.debug(f"Bot said back to command: {bot_return}")
+        db.session.add(models.Messages("BOT", bot_return))
+        db.session.commit()
+        logger.debug("Bots response was committed to database")
+    
     logger.debug(f"Record committed to database")
     emit_all_messages("message receieved")
     

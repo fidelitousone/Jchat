@@ -1,22 +1,21 @@
-import * as React from 'react'
+import * as React from 'react';
 import './myStyle.css';
-import { Socket } from './Socket'
+import { Socket } from './Socket';
 
 export default function MessageBox() {
     const [text, setText] = React.useState("");
-    const [messageList, setMessageList] = React.useState([])
 
     function handleChange(event) {
         setText(event.target.value);
-        console.log(text)
+        console.log(text);
     }
 
     function handleSubmit(event) {
-
+        
         Socket.emit(
             "new message",
             {
-                "message": text
+                "message": text,
             }
         );
 
