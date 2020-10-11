@@ -4,16 +4,16 @@ import { Socket } from './Socket';
 
 export default function MessageHistory() {
     const [messageList, setMessage] = React.useState([])
-    function new_message() {
+    function new_messages() {
         React.useEffect(() => {
             Socket.on("message receieved", (data) => {
                 console.log("Server sent a message: " + data["message"]);
-                setMessage(messageList => [...messageList, data["message"]]);
+                setMessage(data["messages"]);
             })
         }, []);
     }
 
-    new_message();
+    new_messages();
 
     return (
         <div className="MessageHistory">

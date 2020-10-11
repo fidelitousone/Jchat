@@ -4,6 +4,18 @@ from flask_socketio import SocketIO
 import flask_sqlalchemy
 from dotenv import load_dotenv
 from os.path import join, dirname
+import models
+import logging
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+
+formatter  = logging.Formatter("%(levelname)s:%(name)s:%(message)s")
+
+file_handler = logging.FileHandler("Chat Program.log")
+file_handler.setFormatter(formatter)
+
+logger.addHandler(file_handler)
 
 app = flask.Flask(__name__)
 socketio = SocketIO(app)
@@ -21,36 +33,55 @@ database_uri = f"postgresql://{sql_user}:{sql_password}@localhost/postgres"
 app.config["SQLALCHEMY_DATABASE_URI"] = database_uri
 
 db = flask_sqlalchemy.SQLAlchemy(app)
-db.init_app(app)
 db.app = app
 
-db.create_all()
-db.session.commit()
+
+def emit_all_messages(channel):
+    logger.debug(f"Emitted a message on channel {channel}")
+    all_messages = [ \
+        db_message.message for db_message \
+        in db.session.query(models.Messages).all()]
+    
+    socketio.emit(channel,
+        {
+            "messages": all_messages
+        }
+    
+    )
 
 @app.route("/")
 def index():
+    models.db.create_all()
+    msgs = []
+    dbmesg = models.Messages.query.all()
+    for sent_messages in dbmesg:
+        msgs.append(sent_messages.message)
+        
+    logger.debug(f"Database returned: {msgs}")
     return flask.render_template(
         "index.html"
     )
 
 @socketio.on('connect')
 def on_connect():
-    print("User connected to the server.")
-    socketio.emit('connected', {
-        'test': 'Connected'
-    })
+    logger.debug("A client connected to the server.")
+    logger.debug("Emitting back all the messages to the connected user.")
+    emit_all_messages("message receieved")
+    
 
 @socketio.on('new message')
 def new_message(data):
+    logger.debug("Receieved a new_message event, flask called it.")
     message = data["message"]
-    print("Received a message from user.")
-    print(f"Message sent was: {message}")
-    socketio.emit(
-        "message receieved",
-        {
-            "message": message
-        }
-    )
+    logger.debug(f"The message contained: {message}")
+    db.session.add(models.Messages("User",message))
+    db.session.commit()
+    logger.debug(f"Record committed to database")
+    emit_all_messages("message receieved")
+    
+@socketio.on("disconnect")
+def on_disconnect():
+    logger.debug("A client disconnected from the server")
 
 
 if (__name__=="__main__"):
