@@ -6,6 +6,8 @@ from dotenv import load_dotenv
 from os.path import join, dirname
 import models
 import logging
+import requests
+from datetime import date
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -49,12 +51,37 @@ def emit_all_messages(channel):
     )
 
 def handle_bot_invoke(string):
-    command = string.split("!! ")[1]
+    remove_invocation = string.split("!! ")[1]
+    logger.debug(remove_invocation)
+    command = remove_invocation.split(" ")[0]
+    try:
+        commandarg = remove_invocation.split(" ")[1]
+    except IndexError:
+        commandarg = "no args"
     logger.debug(f"Bot handler got command: {command}")
+    logger.debug(f"Command Arguments are: {commandarg}")
     if (command == "about"):
         return "Just a simple chat bot, type !! help for some commands."
     elif (command == "help"):
-        return  "Commands: !! about, !! help"
+        return  "Commands: !! about, !! help, !! funtranslate, !! day"
+    elif (command == "funtranslate"):
+        fun_translate_args = remove_invocation.split("funtranslate")[1]
+        logger.debug("text args are: " + fun_translate_args)
+        url = "https://api.funtranslations.com/translate/leetspeak.json"
+        payload = {
+            "text": f"{fun_translate_args}"
+        }
+        r = requests.get(url, params=payload)
+        logger.debug("Calling URL: " + r.url)
+        resp = r.json()
+        print(resp)
+        translated_text = resp["contents"]["translated"]
+        logger.debug(f"Got message back: {translated_text}")
+        return translated_text
+    elif (command == "day"):
+        today = date.today()
+        day = today.strftime("%b-%d-%Y")
+        return day
     else:
         return "Unknown command, type !! help for a list of commands."
 
