@@ -1,10 +1,31 @@
 import flask 
 import os
 from flask_socketio import SocketIO
+import flask_sqlalchemy
+from dotenv import load_dotenv
+from os.path import join, dirname
 
 app = flask.Flask(__name__)
 socketio = SocketIO(app)
 socketio.init_app(app, cors_allowed_origins="*")
+
+dotenv_path = join(dirname(__file__), 'sql.env')
+load_dotenv(dotenv_path)
+
+sql_user = os.environ["SQL_USER"]
+sql_password = os.environ["SQL_PASSWORD"]
+database_uri = f"postgresql://{sql_user}:{sql_password}@localhost/postgres"
+
+
+
+app.config["SQLALCHEMY_DATABASE_URI"] = database_uri
+
+db = flask_sqlalchemy.SQLAlchemy(app)
+db.init_app(app)
+db.app = app
+
+db.create_all()
+db.session.commit()
 
 @app.route("/")
 def index():

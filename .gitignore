@@ -133,3 +133,6 @@ dmypy.json
 node_modules
 package-lock.json
 static/script.js
+
+#Things that definitely shouldn't be committed at the cost of my grade
+*.env
