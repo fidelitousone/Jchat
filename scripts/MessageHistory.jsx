@@ -7,7 +7,6 @@ export default function MessageHistory() {
     function new_messages() {
         React.useEffect(() => {
             Socket.on("message receieved", (data) => {
-                console.log("Server sent a message: " + data["message"]);
                 setMessage(data["messages"]);
             });
         }, []);
@@ -17,11 +16,9 @@ export default function MessageHistory() {
 
     return (
         <div className="MessageHistory">
-            <ol>
-                {messageList.map(messageList => (
-                    <li key={messageList}>{messageList}</li>
-                ))}
-            </ol>
+            {messageList.map(messageList => (
+                <p key={messageList}>{messageList}</p>
+            ))}
         </div>
     );
 }

@@ -10,7 +10,7 @@ import requests
 from datetime import date
 
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.INFO)
 formatter  = logging.Formatter("%(levelname)s:%(name)s:%(message)s")
 file_handler = logging.FileHandler("Chat Program.log")
 file_handler.setFormatter(formatter)
@@ -39,10 +39,12 @@ db.app = app
 
 def emit_all_messages(channel):
     logger.debug(f"Emitted a message on channel {channel}")
-    all_messages = [ \
-        db_message.message for db_message \
-        in db.session.query(models.Messages).all()]
-    
+    all_messages = []
+        
+    dbmesg = models.Messages.query.all()
+    for sent_messages in dbmesg:
+        all_messages.append(f"{sent_messages.username}: {sent_messages.message}")
+
     socketio.emit(channel,
         {
             "messages": all_messages
@@ -74,7 +76,7 @@ def handle_bot_invoke(string):
         r = requests.get(url, params=payload)
         logger.debug("Calling URL: " + r.url)
         resp = r.json()
-        print(resp)
+        logger.debug(f"funtranslate API returned this json: {resp}")
         translated_text = resp["contents"]["translated"]
         logger.debug(f"Got message back: {translated_text}")
         return translated_text
