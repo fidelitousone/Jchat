@@ -21,12 +21,11 @@ class Bot():
             r = requests.get(self.URL, params=payload)
             resp = r.json()
             try:
-                if (resp["error"]):
-                    return resp["error"]["message"]
+                translated_text = resp["contents"]["translated"]
+                return translated_text
             except IndexError:
-                pass
-            translated_text = resp["contents"]["translated"]
-            return translated_text
+                return resp["error"]
+
         elif (command_itself == "day"):
             today = date.today()
             day = today.strftime("%b-%d-%Y")
