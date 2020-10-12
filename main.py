@@ -134,5 +134,5 @@ if (__name__=="__main__"):
         app,
         debug=True,
         port=int(os.getenv("PORT", 8080)),
-        host=os.getenv("IP", "127.0.0.1")
+        host=os.getenv("IP", "0.0.0.0")
     )
