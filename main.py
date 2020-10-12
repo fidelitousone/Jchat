@@ -1,4 +1,4 @@
-import flask 
+import flask
 import os
 from flask_socketio import SocketIO
 import flask_sqlalchemy
@@ -11,7 +11,7 @@ from datetime import date
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
-formatter  = logging.Formatter("%(levelname)s:%(name)s:%(message)s")
+formatter = logging.Formatter("%(levelname)s:%(name)s:%(message)s")
 file_handler = logging.FileHandler("Chat Program.log")
 file_handler.setFormatter(formatter)
 logger.addHandler(file_handler)
@@ -30,22 +30,23 @@ db = flask_sqlalchemy.SQLAlchemy(app)
 db.app = app
 
 
-
-
 def emit_all_messages(channel):
     logger.debug(f"Emitted a message on channel {channel}")
     all_messages = []
-        
+
     dbmesg = models.Messages.query.all()
     for sent_messages in dbmesg:
-        all_messages.append(f"{sent_messages.username}: {sent_messages.message}")
+        msg = f"{sent_messages.username}: {sent_messages.message}"
+        all_messages.append(msg)
 
-    socketio.emit(channel,
+    socketio.emit(
+        channel,
         {
             "messages": all_messages
         }
-    
+
     )
+
 
 def handle_bot_invoke(string):
     remove_invocation = string.split("!! ")[1]
@@ -60,7 +61,7 @@ def handle_bot_invoke(string):
     if (command == "about"):
         return "Just a simple chat bot, type !! help for some commands."
     elif (command == "help"):
-        return  "Commands: !! about, !! help, !! funtranslate, !! day"
+        return "Commands: !! about, !! help, !! funtranslate, !! day"
     elif (command == "funtranslate"):
         fun_translate_args = remove_invocation.split("funtranslate")[1]
         logger.debug("text args are: " + fun_translate_args)
@@ -82,6 +83,7 @@ def handle_bot_invoke(string):
     else:
         return "Unknown command, type !! help for a list of commands."
 
+
 @app.route("/")
 def index():
     models.db.create_all()
@@ -89,27 +91,26 @@ def index():
     dbmesg = models.Messages.query.all()
     for sent_messages in dbmesg:
         msgs.append(sent_messages.message)
-        
+
     logger.debug(f"Database returned: {msgs}")
     return flask.render_template(
         "index.html"
     )
+
 
 @socketio.on('connect')
 def on_connect():
     logger.debug("A client connected to the server.")
     logger.debug("Emitting back all the messages to the connected user.")
     emit_all_messages("message receieved")
-    
+
 
 @socketio.on('new message')
 def new_message(data):
     logger.debug("Receieved a new_message event, flask called it.")
     message = data["message"]
     logger.debug(f"The message contained: {message}")
-    
 
-    
     db.session.add(models.Messages("User", message))
     db.session.commit()
     if (message.startswith("!! ")):
@@ -120,16 +121,17 @@ def new_message(data):
         db.session.add(models.Messages("BOT", bot_return))
         db.session.commit()
         logger.debug("Bots response was committed to database")
-    
-    logger.debug(f"Record committed to database")
+
+    logger.debug("Record committed to database")
     emit_all_messages("message receieved")
-    
+
+
 @socketio.on("disconnect")
 def on_disconnect():
     logger.debug("A client disconnected from the server")
 
 
-if (__name__=="__main__"):
+if (__name__ == "__main__"):
     socketio.run(
         app,
         debug=True,
