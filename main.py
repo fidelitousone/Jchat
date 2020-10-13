@@ -8,6 +8,7 @@ import models
 import logging
 from Bot import Bot
 
+
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 formatter = logging.Formatter("%(levelname)s:%(name)s:%(message)s")
@@ -46,6 +47,8 @@ def emit_all_messages(channel):
 
     )
 
+def emit_connected_users(channel):
+    socketio.emit(channel)
 
 def handle_bot_invoke(string):
     remove_invocation = string.split("!! ")[1]
@@ -83,6 +86,7 @@ def on_connect():
     logger.debug("A client connected to the server.")
     logger.debug("Emitting back all the messages to the connected user.")
     emit_all_messages("message receieved")
+    emit_connected_users("user_connected")
 
 
 @socketio.on('new message')
@@ -109,6 +113,7 @@ def new_message(data):
 @socketio.on("disconnect")
 def on_disconnect():
     logger.debug("A client disconnected from the server")
+    emit_connected_users("user_disconnected")
 
 
 if (__name__ == "__main__"):
