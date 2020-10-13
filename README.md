@@ -19,6 +19,28 @@ React chat application with a python backend.
 * Postgresql
 
 ## Setup
+### MAKE SURE YOU SETUP POSTGRESQL STUFF FIRST 
+* `sudo yum install postgresql postgresql-server postgresql-devel postgresql-contrib postgresql-docs`
+* `sudo service postgresql initdb`
+* `sudo service postgresql start`
+* `sudo -u postgres createuser --superuser $USER`
+* `sudo -u postgres createdb $USER`
+* `psql`
+* `create user some_username_here superuser password 'some_unique_new_password_here';`
+
+### Deployment
+* Make a heroku account if you don't already have one!!!
+* clone this repo `https://github.com/NJIT-CS490/project2-m1-js843.git`
+* `cd project2-m1-js843`
+* `heroku login -i`
+* `heroku create`
+* `heroku addons:create heroku-postgresql:hobby-dev`
+* `heroku pg:wait`
+* `psql`
+* `ALTER DATABASE Postgres OWNER '{YOUR_USERNAME}'`
+* `heroku pg:push postgres DATABASE_URL` this is the password you use to log into the db
+* `git push heroku master`
+* Click on the link deployment message gives then use the app.
 
 ## Technical Difficulties
 ### Hooking up SocketIO from the front end to the backend.
