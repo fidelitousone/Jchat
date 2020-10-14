@@ -47,8 +47,10 @@ def emit_all_messages(channel):
 
     )
 
+
 def emit_connected_users(channel):
     socketio.emit(channel)
+
 
 def handle_bot_invoke(string):
     remove_invocation = string.split("!! ")[1]
