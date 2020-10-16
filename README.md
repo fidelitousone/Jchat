@@ -1,4 +1,4 @@
-# project2-m1-js843
+# project2-m2-js843
 
 React chat application with a python backend.
 
