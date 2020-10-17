@@ -4,21 +4,43 @@ import { Socket } from './Socket';
 
 export default function MessageHistory() {
     const [messageList, setMessage] = React.useState([]);
+    var regex = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-_]*)?\??(?:[\-\+=&;%@\.\w_]*)#?(?:[\.\!\/\\\w]*))?)/;
+
+    function list_messages() {
+        var arry = [];
+        for (var message of messageList) {
+            console.log(message)
+            if (message.startsWith("BOT")) {
+                var message_without_user = message.split("BOT: ")[1]
+            } else {
+                var message_without_user = message.split("User: ")[1]
+            }
+            var user = message.split(":")[0]
+            if (regex.test(message_without_user)) {
+                const msg = (<div><span>{user}: </span><a href={message_without_user}>{message_without_user}</a></div>);
+                arry.push(msg);
+            } else {
+                const msg = (<p>{user}: {message_without_user}</p>);
+                arry.push(msg);
+            }
+        }
+        return arry;
+    }
+    
     function new_messages() {
         React.useEffect(() => {
             Socket.on("message receieved", (data) => {
                 setMessage(data["messages"]);
             });
+            
         }, []);
     }
-
+    
     new_messages();
-
+    
     return (
         <div className="MessageHistory">
-            {messageList.map(messageList => (
-                <p key={messageList}>{messageList}</p>
-            ))}
+            {list_messages()}
         </div>
     );
 }
