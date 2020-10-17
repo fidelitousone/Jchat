@@ -1,6 +1,9 @@
 import * as React from 'react';
 import './myStyle.css';
 import { Socket } from './Socket';
+import Message  from './Message';
+import MessageUrl  from './MessageUrl';
+import MessageImage  from './MessageImage';
 
 export default function MessageHistory() {
     const [messageList, setMessage] = React.useState([]);
@@ -9,7 +12,6 @@ export default function MessageHistory() {
     function list_messages() {
         var arry = [];
         for (var message of messageList) {
-            console.log(message)
             if (message.startsWith("BOT")) {
                 var message_without_user = message.split("BOT: ")[1]
             } else {
@@ -17,11 +19,9 @@ export default function MessageHistory() {
             }
             var user = message.split(":")[0]
             if (regex.test(message_without_user)) {
-                const msg = (<div><span>{user}: </span><a href={message_without_user}>{message_without_user}</a></div>);
-                arry.push(msg);
+                arry.push(<MessageUrl username={user} message={message_without_user} />);
             } else {
-                const msg = (<p>{user}: {message_without_user}</p>);
-                arry.push(msg);
+                arry.push(<Message username={user} message={message_without_user} />);
             }
         }
         return arry;
