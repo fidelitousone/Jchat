@@ -69,6 +69,13 @@ that I created following the example of the Usps database table provided in the 
 It turned out for some reason I needed to call `models.db.create_all()` in order to make
 sure that the database table itself  was being created.
 
+### Conditionally Rendering Messages
+
+I thought rendering user messages into their respective formats to account for whether a message is a link or not was going to easy. However, the part that proved to
+be challenging was the fact that I was trying to use a map to iterate over objects instead of using a different function that’ll handle the rendering properly for me.
+The issue was, that with a map, you can’t edit or use control flow on the items, so the solution I found was to make another function that handles returning the 
+proper render of either a link or an image
+
 ## Known Issues
 ### The Scrollbar Doesn't Automatically Go Down!
 
