@@ -29,7 +29,6 @@ export default function MessageHistory() {
     
     function new_messages() {
         React.useEffect(() => {
-            // Fills all the messages in the state from the database
             Socket.on("message receieved", (data) => {
                 setMessage(data["messages"]);
             });
