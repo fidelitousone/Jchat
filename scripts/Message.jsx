@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Left } from 'react-bootstrap/lib/media';
 
 export default function Message(props) {
 
