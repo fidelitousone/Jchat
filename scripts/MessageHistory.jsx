@@ -4,10 +4,10 @@ import { Socket } from './Socket';
 import Message  from './Message';
 import MessageUrl  from './MessageUrl';
 import MessageImage  from './MessageImage';
+import validator from 'validator';
 
 export default function MessageHistory() {
     const [messageList, setMessage] = React.useState([]);
-    var regex = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-_]*)?\??(?:[\-\+=&;%@\.\w_]*)#?(?:[\.\!\/\\\w]*))?)/;
     var image_regex = /^https?:\/\/(?:[a-z0-9\-]+\.)+[a-z]{2,6}(?:\/[^\/#?]+)+\.(?:jpe?g|gif|png|bmp)$/i
 
     function list_messages() {
@@ -21,7 +21,7 @@ export default function MessageHistory() {
             var user = message.split(":")[0]
             if (image_regex.test(message_without_user)) {
                 arry.push(<MessageImage username={user} image_url={message_without_user} />);
-            } else if (regex.test(message_without_user)) {
+            } else if (validator.isURL(message_without_user)) {
                 arry.push(<MessageUrl username={user} message={message_without_user} />);
             } else {
                 arry.push(<Message username={user} message={message_without_user} />);
