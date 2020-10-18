@@ -4,7 +4,7 @@ export default function MessageImage(props) {
 
     return (
         <div className="MessageImage">
-            <p>{props.username}: <img src={props.image_url} width="250" height="250"></img></p>
+            <img src={props.profile_picture} width="25" height="25"></img><p>{props.username}: <img src={props.image_url} width="250" height="250"></img></p>
         </div>
     )
 }
