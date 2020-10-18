@@ -4,6 +4,7 @@ import { Socket } from './Socket';
 
 export default function MessageBox() {
     const [text, setText] = React.useState("");
+    const [disabled, setDisabled] = React.useState(true);
 
     function handleChange(event) {
         setText(event.target.value);
@@ -27,7 +28,7 @@ export default function MessageBox() {
     
     return (
         <form style={{marginLeft: "27.5%"}} onSubmit={handleSubmit}>
-            <input type="text" value={text} onChange={handleChange}></input>
+            <input type="text" value={text} onChange={handleChange} disabled={disabled}></input>
             <button>Send</button>
         </form>
     );
