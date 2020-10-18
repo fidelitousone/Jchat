@@ -13,7 +13,14 @@ export default function MessageHistory() {
     function list_messages() {
         var arry = [];
         for (var message of messageList) {
-            arry.push(<Message username={message["username"]} message={message["message"]}/>)
+            if (image_regex.test(message["message"])) {
+                arry.push(<MessageImage username={message["username"]} image_url={message["message"]} />)
+            } else if (validator.isURL(message["message"])) {
+                arry.push(<MessageUrl username={message["username"]} message={message["message"]} />)
+            } else {
+                arry.push(<Message username={message["username"]} message={message["message"]}/>)
+            }
+            
         }
         return arry;
     }
