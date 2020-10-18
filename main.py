@@ -36,8 +36,12 @@ def emit_all_messages(channel):
 
     dbmesg = models.Messages.query.all()
     for sent_messages in dbmesg:
-        msg = f"{sent_messages.username}: {sent_messages.message}"
-        all_messages.append(msg)
+        msg_data = {
+            "username": sent_messages.username,
+            "message": sent_messages.message,
+            "profile_picture": sent_messages.profilePicture
+        }
+        all_messages.append(msg_data)
 
     socketio.emit(
         channel,
@@ -72,6 +76,7 @@ def handle_bot_invoke(string):
 @app.route("/")
 def index():
     models.db.create_all()
+    db.session.commit()
     msgs = []
     dbmesg = models.Messages.query.all()
     for sent_messages in dbmesg:
@@ -96,16 +101,17 @@ def new_message(data):
     logger.debug("Receieved a new_message event, flask called it.")
     message = data["message"]
     username = data["username"]
+    pfp = data["profile_picture"]
     logger.debug(f"The message contained: {message}")
 
-    db.session.add(models.Messages(username, message))
+    db.session.add(models.Messages(username, message, pfp))
     db.session.commit()
     if (message.startswith("!! ")):
         botstr = message
         logger.debug("Recognized bot invocation")
         bot_return = handle_bot_invoke(botstr)
         logger.debug(f"Bot said back to command: {bot_return}")
-        db.session.add(models.Messages("BOT", bot_return))
+        db.session.add(models.Messages("BOT", bot_return, "placeholder"))
         db.session.commit()
         logger.debug("Bots response was committed to database")
 
