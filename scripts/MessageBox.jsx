@@ -27,12 +27,24 @@ export default function MessageBox() {
 
     }
     
+    const responseGoogle = (response) => {
+        console.log(response);
+        setDisabled(prevState => prevState = false);
+    }
+    
     return (
         <div>
             <form style={{marginLeft: "27.5%"}} onSubmit={handleSubmit}>
                 <input type="text" value={text} onChange={handleChange} disabled={disabled}></input>
                 <button disabled={disabled}>Send</button>
             </form>
+            <GoogleLogin
+                clientId="285282648119-fijvnrjed7qt8da3etodcr0dtajarn0k.apps.googleusercontent.com"
+                buttonText="Login"
+                onSuccess={responseGoogle}
+                onFailure={responseGoogle}
+                cookiePolicy={'single_host_origin'}
+            />
         </div>
     );
 }
