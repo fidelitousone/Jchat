@@ -31,7 +31,7 @@ export default function MessageBox() {
         <div>
             <form style={{marginLeft: "27.5%"}} onSubmit={handleSubmit}>
                 <input type="text" value={text} onChange={handleChange} disabled={disabled}></input>
-                <button>Send</button>
+                <button disabled={disabled}>Send</button>
             </form>
         </div>
     );
