@@ -15,8 +15,11 @@ export default function MessageHistory() {
         for (var message of messageList) {
             if (message.startsWith("BOT")) {
                 var message_without_user = message.split("BOT: ")[1]
-            } else {
+            } else if (message.startsWith("User: ")) {
                 var message_without_user = message.split("User: ")[1]
+            } else {
+                arry.push(<Message username="User: (DEFFERED EXCEPTION) " message={message} />)
+                continue
             }
             var user = message.split(":")[0]
             if (image_regex.test(message_without_user)) {
