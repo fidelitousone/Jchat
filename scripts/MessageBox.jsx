@@ -6,6 +6,8 @@ import { GoogleLogin } from 'react-google-login';
 export default function MessageBox() {
     const [text, setText] = React.useState("");
     const [disabled, setDisabled] = React.useState(true);
+    const [email, setEmail] = React.useState("");
+    const [profilePicture, setProfilePicture] = React.useState("");
 
     function handleChange(event) {
         setText(event.target.value);
@@ -22,14 +24,17 @@ export default function MessageBox() {
         );
 
         console.log(text);
+        console.log(email + " " + profilePicture);
         setText("");
         event.preventDefault();
 
     }
     
     const responseGoogle = (response) => {
-        console.log(response);
         setDisabled(prevState => prevState = false);
+        setEmail(prevState => prevState = response.profileObj.email);
+        setProfilePicture(prevState => prevState = response.profileObj.imageUrl);
+        
     }
     
     return (
