@@ -95,9 +95,10 @@ def on_connect():
 def new_message(data):
     logger.debug("Receieved a new_message event, flask called it.")
     message = data["message"]
+    username = data["username"]
     logger.debug(f"The message contained: {message}")
 
-    db.session.add(models.Messages("User", message))
+    db.session.add(models.Messages(username, message))
     db.session.commit()
     if (message.startswith("!! ")):
         botstr = message

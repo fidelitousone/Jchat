@@ -19,12 +19,13 @@ export default function MessageBox() {
         Socket.emit(
             "new message",
             {
+                "username": email,
                 "message": text,
+                "profile_picture": profilePicture
             }
         );
 
         console.log(text);
-        console.log(email + " " + profilePicture);
         setText("");
         event.preventDefault();
 
