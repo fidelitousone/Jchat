@@ -13,22 +13,14 @@ export default function MessageHistory() {
     function list_messages() {
         var arry = [];
         for (var message of messageList) {
-            if (message.startsWith("BOT")) {
-                var message_without_user = message.split("BOT: ")[1]
-            } else if (message.startsWith("User: ")) {
-                var message_without_user = message.split("User: ")[1]
+            if (image_regex.test(message["message"])) {
+                arry.push(<MessageImage username={message["username"]} image_url={message["message"]} profile_picture={message["profile_picture"]} />)
+            } else if (validator.isURL(message["message"])) {
+                arry.push(<MessageUrl username={message["username"]} message={message["message"]} profile_picture={message["profile_picture"]} />)
             } else {
-                arry.push(<Message username="User: (DEFFERED EXCEPTION) " message={message} />)
-                continue
+                arry.push(<Message username={message["username"]} message={message["message"]} profile_picture={message["profile_picture"]} />)
             }
-            var user = message.split(":")[0]
-            if (image_regex.test(message_without_user)) {
-                arry.push(<MessageImage username={user} image_url={message_without_user} />);
-            } else if (validator.isURL(message_without_user)) {
-                arry.push(<MessageUrl username={user} message={message_without_user} />);
-            } else {
-                arry.push(<Message username={user} message={message_without_user} />);
-            }
+            
         }
         return arry;
     }

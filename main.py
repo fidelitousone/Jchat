@@ -8,9 +8,9 @@ import models
 import logging
 from Bot import Bot
 
-
+user_count = 0
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.DEBUG)
 formatter = logging.Formatter("%(levelname)s:%(name)s:%(message)s")
 file_handler = logging.FileHandler("Chat Program.log")
 file_handler.setFormatter(formatter)
@@ -36,8 +36,12 @@ def emit_all_messages(channel):
 
     dbmesg = models.Messages.query.all()
     for sent_messages in dbmesg:
-        msg = f"{sent_messages.username}: {sent_messages.message}"
-        all_messages.append(msg)
+        msg_data = {
+            "username": sent_messages.username,
+            "message": sent_messages.message,
+            "profile_picture": sent_messages.profilePicture
+        }
+        all_messages.append(msg_data)
 
     socketio.emit(
         channel,
@@ -72,6 +76,7 @@ def handle_bot_invoke(string):
 @app.route("/")
 def index():
     models.db.create_all()
+    db.session.commit()
     msgs = []
     dbmesg = models.Messages.query.all()
     for sent_messages in dbmesg:
@@ -85,26 +90,34 @@ def index():
 
 @socketio.on('connect')
 def on_connect():
+    global user_count
     logger.debug("A client connected to the server.")
     logger.debug("Emitting back all the messages to the connected user.")
     emit_all_messages("message receieved")
-    emit_connected_users("user_connected")
+    socketio.emit(
+        "user_connected",
+        {
+            "user_count": user_count,
+        }
+    )
 
 
 @socketio.on('new message')
 def new_message(data):
     logger.debug("Receieved a new_message event, flask called it.")
     message = data["message"]
+    username = data["username"]
+    pfp = data["profile_picture"]
     logger.debug(f"The message contained: {message}")
 
-    db.session.add(models.Messages("User", message))
+    db.session.add(models.Messages(username, message, pfp))
     db.session.commit()
     if (message.startswith("!! ")):
         botstr = message
         logger.debug("Recognized bot invocation")
         bot_return = handle_bot_invoke(botstr)
         logger.debug(f"Bot said back to command: {bot_return}")
-        db.session.add(models.Messages("BOT", bot_return))
+        db.session.add(models.Messages("BOT", bot_return, "placeholder"))
         db.session.commit()
         logger.debug("Bots response was committed to database")
 
@@ -112,10 +125,33 @@ def new_message(data):
     emit_all_messages("message receieved")
 
 
+@socketio.on('user_logged_in')
+def new_user(data):
+    global user_count
+    user_count += 1
+    logger.debug(f"User log in Function user_count is: {user_count}")
+    socketio.emit(
+        "user_connected",
+        {
+            "user_count": user_count,
+        }
+    )
+
+
 @socketio.on("disconnect")
 def on_disconnect():
+    global user_count
+    user_count -= 1
+    if (user_count < 0):
+        user_count = 0
+    logger.debug(f"Disconnected Function user_count is: {user_count}")
     logger.debug("A client disconnected from the server")
-    emit_connected_users("user_disconnected")
+    socketio.emit(
+        "user_disconnected",
+        {
+            "user_count": user_count,
+        }
+    )
 
 
 if (__name__ == "__main__"):
