@@ -76,21 +76,19 @@ be challenging was the fact that I was trying to use a map to iterate over objec
 The issue was, that with a map, you can’t edit or use control flow on the items, so the solution I found was to make another function that handles returning the 
 proper render of either a link or an image
 
+### Displaying Links, Images, and Messages
+
+This integration in my program truly revealed that my original implementation of displaying messages in Milestone 1 was not very good at all. Originally what I was 
+doing is concatting both the user AND the message itself as a whole message and sent that back to the front end. I had to use extremely complicated methods of 
+string splitting which weren't fun all to even determine what's a link, a message, or even an image. The solution was to completely redo the way messages are sent,
+that way, I was delivering an array of dictionaries which had its information separately to be passed to a prop.
+
 ## Known Issues
 ### The Scrollbar Doesn't Automatically Go Down!
 
 Obviously one of the things expected of every modern chat program is an option 
 to automatically scroll the chat down when there's a new message that's sent.
 Given more time this probably could have been implemented.
-
-
-### There is no count of users being updated.
-
-A glaring issue, but there is no count of users that are updated whenever a 
-new user joins or leave. This is due to the fact that I don't understand how
-to uniquely assign an id or get unique IDs from sockets. Additionally, there's
-the issue of how do I keep track of the current users connected? If given more
-time this could have been cleared up.
 
 ### The HTML Styling is poor.
 
@@ -99,5 +97,9 @@ currently the way the HTML looks isn't so great. I dedicated a vast majority of
 my time to ensure the mechanics of the program itself worked rather than the 
 aesthetic components of it.
 
+### Too many refreshes kills the program
 
-
+I'm not sure why, but whenever an excessive amount of messages are sent, the
+database decides to lock up and not function. Given more time I could use a 
+session implementation to stop the database from crashing the entire server after
+a few messages are sent.
