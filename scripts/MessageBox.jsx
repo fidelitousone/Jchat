@@ -40,8 +40,8 @@ export default function MessageBox() {
             {
                 "add_user": email
             }
-        )
-    }
+        );
+    };
     
     return (
         <div>

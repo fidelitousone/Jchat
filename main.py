@@ -9,8 +9,14 @@ import logging
 from Bot import Bot
 
 user_count = 0
+
+# Flake 8 said long lines are bad.
+bot_image1 = "https://static-1.bitchute.com/live"
+bot_image2 = "/channel_images/ZBaPQppGwNka/od0Qb8vms4PDWRPACmGfjWDm_medium.jpg"
+bot_image = f"{bot_image1}{bot_image2}"
+
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.INFO)
 formatter = logging.Formatter("%(levelname)s:%(name)s:%(message)s")
 file_handler = logging.FileHandler("Chat Program.log")
 file_handler.setFormatter(formatter)
@@ -117,7 +123,7 @@ def new_message(data):
         logger.debug("Recognized bot invocation")
         bot_return = handle_bot_invoke(botstr)
         logger.debug(f"Bot said back to command: {bot_return}")
-        db.session.add(models.Messages("BOT", bot_return, "placeholder"))
+        db.session.add(models.Messages("BOT", bot_return, bot_image))
         db.session.commit()
         logger.debug("Bots response was committed to database")
 

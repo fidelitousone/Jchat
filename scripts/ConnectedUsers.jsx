@@ -8,18 +8,14 @@ export default function ConnectedUsers() {
     function handle_user_presence() {
         React.useEffect(() => {
             Socket.on("user_connected", (data) => {
-                console.log("Server said: A user connnected")
                 setUserCount(data["user_count"]);
-                console.log("I updated user count to " + userCount);
             });
         }, []);
         
         
         React.useEffect(() => {
             Socket.on("user_disconnected", (data) => {
-                console.log("Server said: A user disconnected")
                 setUserCount(data["user_count"]);
-                console.log("I updated user count to " + userCount);
             });
         }, []);
     }
