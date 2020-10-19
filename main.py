@@ -8,9 +8,9 @@ import models
 import logging
 from Bot import Bot
 
-
+user_count = 0
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.DEBUG)
 formatter = logging.Formatter("%(levelname)s:%(name)s:%(message)s")
 file_handler = logging.FileHandler("Chat Program.log")
 file_handler.setFormatter(formatter)
@@ -90,10 +90,16 @@ def index():
 
 @socketio.on('connect')
 def on_connect():
+    global user_count
     logger.debug("A client connected to the server.")
     logger.debug("Emitting back all the messages to the connected user.")
     emit_all_messages("message receieved")
-    emit_connected_users("user_connected")
+    socketio.emit(
+        "user_connected",
+        {
+            "user_count": user_count,
+        }
+    )
 
 
 @socketio.on('new message')
@@ -119,10 +125,33 @@ def new_message(data):
     emit_all_messages("message receieved")
 
 
+@socketio.on('user_logged_in')
+def new_user(data):
+    global user_count
+    user_count += 1
+    logger.debug(f"User log in Function user_count is: {user_count}")
+    socketio.emit(
+        "user_connected",
+        {
+            "user_count": user_count,
+        }
+    )
+
+
 @socketio.on("disconnect")
 def on_disconnect():
+    global user_count
+    user_count -= 1
+    if (user_count < 0):
+        user_count = 0
+    logger.debug(f"Disconnected Function user_count is: {user_count}")
     logger.debug("A client disconnected from the server")
-    emit_connected_users("user_disconnected")
+    socketio.emit(
+        "user_disconnected",
+        {
+            "user_count": user_count,
+        }
+    )
 
 
 if (__name__ == "__main__"):

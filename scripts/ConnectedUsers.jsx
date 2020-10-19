@@ -9,7 +9,7 @@ export default function ConnectedUsers() {
         React.useEffect(() => {
             Socket.on("user_connected", (data) => {
                 console.log("Server said: A user connnected")
-                setUserCount(prevcount => prevcount + 1);
+                setUserCount(data["user_count"]);
                 console.log("I updated user count to " + userCount);
             });
         }, []);
@@ -18,7 +18,7 @@ export default function ConnectedUsers() {
         React.useEffect(() => {
             Socket.on("user_disconnected", (data) => {
                 console.log("Server said: A user disconnected")
-                setUserCount(prevcount => prevcount - 1);
+                setUserCount(data["user_count"]);
                 console.log("I updated user count to " + userCount);
             });
         }, []);

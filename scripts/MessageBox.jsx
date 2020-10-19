@@ -35,7 +35,12 @@ export default function MessageBox() {
         setDisabled(prevState => prevState = false);
         setEmail(prevState => prevState = response.profileObj.email);
         setProfilePicture(prevState => prevState = response.profileObj.imageUrl);
-        
+        Socket.emit(
+            "user_logged_in",
+            {
+                "add_user": email
+            }
+        )
     }
     
     return (
