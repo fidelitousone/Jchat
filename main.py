@@ -31,6 +31,7 @@ load_dotenv(dotenv_path)
 
 database_uri = os.environ["DATABASE_URL"]
 app.config["SQLALCHEMY_DATABASE_URI"] = database_uri
+app.config['SQLALCHEMY_POOL_SIZE'] = 1000
 
 db = flask_sqlalchemy.SQLAlchemy(app)
 db.app = app
