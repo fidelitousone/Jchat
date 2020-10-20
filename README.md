@@ -19,6 +19,24 @@ React chat application with a python backend.
 * Postgresql
 
 ## Setup
+
+### Make a Google Developer Account
+
+* Go to `developer.google.com`
+* Make an account NOT USING YOUR NJIT EMAIL!!!!!!!!!!!!!!
+* Make a new project 
+* Name it ANYTHING BUT DON'T USE GOOGLE IN THE NAME
+* Go to credentials
+* Configure Consent
+* Select External
+* Name the application ANYTHING BUT DON'T USE GOOGLE IN THE NAME
+* Create App
+* Go to Create OAuth ID
+* Select Web application
+* Add the website you're using to the authorized domain/java and both to authorized redirect, it might take a little bit just wait
+* Copy the client ID
+* Paste into the React component with the correct ID
+
 ### MAKE SURE YOU SETUP POSTGRESQL STUFF FIRST 
 * `sudo yum install postgresql postgresql-server postgresql-devel postgresql-contrib postgresql-docs`
 * `sudo service postgresql initdb`
