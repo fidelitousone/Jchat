@@ -7,6 +7,7 @@ from os.path import join, dirname
 import models
 import logging
 from Bot import Bot
+from sqlalchemy.pool import NullPool
 
 user_count = 0
 
@@ -31,7 +32,7 @@ load_dotenv(dotenv_path)
 
 database_uri = os.environ["DATABASE_URL"]
 app.config["SQLALCHEMY_DATABASE_URI"] = database_uri
-app.config['SQLALCHEMY_POOL_SIZE'] = 1000
+app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {"poolclass": NullPool}
 
 db = flask_sqlalchemy.SQLAlchemy(app)
 db.app = app
@@ -48,7 +49,9 @@ def emit_all_messages(channel):
             "message": sent_messages.message,
             "profile_picture": sent_messages.profilePicture
         }
+        models.db.session.close()
         all_messages.append(msg_data)
+    models.db.session.close()
 
     socketio.emit(
         channel,
@@ -82,17 +85,17 @@ def handle_bot_invoke(string):
 
 @app.route("/")
 def index():
-    models.db.create_all()
-    db.session.commit()
     msgs = []
     dbmesg = models.Messages.query.all()
     for sent_messages in dbmesg:
         msgs.append(sent_messages.message)
+        models.db.session.close()
 
     logger.debug(f"Database returned: {msgs}")
     return flask.render_template(
         "index.html"
     )
+    models.db.session.close()
 
 
 @socketio.on('connect')
@@ -119,13 +122,16 @@ def new_message(data):
 
     db.session.add(models.Messages(username, message, pfp))
     db.session.commit()
+    models.db.session.close()
     if (message.startswith("!! ")):
         botstr = message
         logger.debug("Recognized bot invocation")
         bot_return = handle_bot_invoke(botstr)
         logger.debug(f"Bot said back to command: {bot_return}")
         db.session.add(models.Messages("BOT", bot_return, bot_image))
+        models.db.session.close()
         db.session.commit()
+        models.db.session.close()
         logger.debug("Bots response was committed to database")
 
     logger.debug("Record committed to database")
@@ -147,6 +153,7 @@ def new_user(data):
 
 @socketio.on("disconnect")
 def on_disconnect():
+    models.db.session.close()
     global user_count
     user_count -= 1
     if (user_count < 0):
