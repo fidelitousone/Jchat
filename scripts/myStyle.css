@@ -14,7 +14,7 @@
 
 .MessageHistory {
     margin: 0 5%;
-
+    word-wrap: break-word;
 }
 
 .ConnectedUsers {
