@@ -12,9 +12,13 @@ jobs:
       - python/install-deps
       - python/save-cache
       - run:
-          command: python ./tests/unmocked_unit_tests.py
+          command: |
+            coverage run ./tests/unmocked_unit_tests.py
+            coverage report
+            coverage html
           name: Unmocked Unit Tests
-
+      - store_artifacts:
+          path: htmlcov
 workflows:
   main:
     jobs:
