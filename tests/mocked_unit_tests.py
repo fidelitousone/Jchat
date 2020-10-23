@@ -6,7 +6,7 @@ import sys
 sys.path.append(".")
 from Bot import Bot # noqa
 from main import emit_connected_users, new_message, new_user, on_connect
-from main import on_disconnect
+from main import index, on_disconnect
 
 
 class TestMocked(unittest.TestCase):
@@ -113,6 +113,11 @@ class TestMocked(unittest.TestCase):
     @mock.patch("models.db.session")
     def test_new_msg_bot(self, mock):
         new_message(self.front_end_resp_bot)
+
+    @mock.patch("models.db.session")
+    @mock.patch("flask.render_template")
+    def test_index(self, mock, mock1):
+        index()
 
 
 if (__name__ == '__main__'):
