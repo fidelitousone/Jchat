@@ -130,7 +130,6 @@ def new_user(data):
 
 @socketio.on("disconnect")
 def on_disconnect():
-    models.db.session.close()
     global user_count
     user_count -= 1
     if (user_count < 0):

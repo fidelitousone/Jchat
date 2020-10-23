@@ -5,6 +5,8 @@ import json
 import sys
 sys.path.append(".")
 from Bot import Bot # noqa
+from main import emit_connected_users, new_message, new_user, on_connect
+from main import on_disconnect
 
 
 class TestMocked(unittest.TestCase):
@@ -36,6 +38,18 @@ class TestMocked(unittest.TestCase):
             "code": 429,
             "message": f"{err_str}"
         }
+    }
+
+    front_end_resp = {
+        "message": "look at the TOP of his head",
+        "username": "ben_dover@gmail.com",
+        "profile_picture": "www.example.com"
+    }
+
+    front_end_resp_bot = {
+        "message": "!! help",
+        "username": "ben_dover@gmail.com",
+        "profile_picture": "www.example.com"
     }
 
     failed_message = json.dumps(failed_response)
@@ -72,6 +86,32 @@ class TestMocked(unittest.TestCase):
         command = " I craved the strength and the certainty of steel"
         result = self.bot.execute_command(f"{invocation}{command}")
         self.assertEqual(result, self.err_str)
+
+    @mock.patch("flask_socketio.SocketIO.emit")
+    def test_emit_connected_users(self, mock):
+        emit_connected_users("pickle asmr")
+        mock.assert_called_with("pickle asmr")
+
+    @mock.patch("flask_socketio.SocketIO.emit")
+    def test_on_connect(self, mock):
+        on_connect()
+
+    @mock.patch("flask_socketio.SocketIO.emit")
+    def test_new_user(self, mock):
+        data = "who put on this planet eugh"
+        new_user(data)
+
+    @mock.patch("flask_socketio.SocketIO.emit")
+    def test_on_disconnect(self, mock):
+        on_disconnect()
+
+    @mock.patch("models.db.session")
+    def test_on_new_message(self, mock):
+        new_message(self.front_end_resp)
+
+    @mock.patch("models.db.session")
+    def test_new_msg_bot(self, mock):
+        new_message(self.front_end_resp_bot)
 
 
 if (__name__ == '__main__'):
