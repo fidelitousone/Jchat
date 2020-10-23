@@ -23,8 +23,8 @@ class Bot():
             try:
                 translated_text = resp["contents"]["translated"]
                 return translated_text
-            except IndexError:
-                return resp["error"]
+            except KeyError:
+                return resp["error"]["message"]
 
         elif (command_itself == "day"):
             today = date.today()
