@@ -4,13 +4,12 @@ from flask_socketio import SocketIO
 import flask_sqlalchemy
 from dotenv import load_dotenv
 from os.path import join, dirname
-import models
 from Bot import Bot
 from sqlalchemy.pool import NullPool
 
 user_count = 0
 
-# Flake 8 said long lines are bad.
+#Flake 8 said long lines are bad. # noqa
 bot_image1 = "https://static-1.bitchute.com/live"
 bot_image2 = "/channel_images/ZBaPQppGwNka/od0Qb8vms4PDWRPACmGfjWDm_medium.jpg"
 bot_image = f"{bot_image1}{bot_image2}"
@@ -29,6 +28,7 @@ app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {"poolclass": NullPool}
 
 db = flask_sqlalchemy.SQLAlchemy(app)
 db.app = app
+import models # noqa
 
 
 def emit_all_messages(channel):

@@ -1,7 +1,8 @@
 import unittest
 import sys
 sys.path.append(".")
-from Bot import Bot
+from Bot import Bot # noqa
+from main import handle_bot_invoke # noqa
 
 
 class TestUnmocked(unittest.TestCase):
@@ -31,6 +32,11 @@ class TestUnmocked(unittest.TestCase):
         API_LINK = "https://api.funtranslations.com"
         LEETSPEAK_URL = f"{API_LINK}/translate/leetspeak.json"
         self.assertEqual(LEETSPEAK_URL, self.bot.URL)
+
+    def test_handle_bot_invoke(self):
+        result = handle_bot_invoke("!! about")
+        expect = "Just a simple chat bot, type !! help for some commands."
+        self.assertEqual(result, expect)
 
 
 if (__name__ == '__main__'):
