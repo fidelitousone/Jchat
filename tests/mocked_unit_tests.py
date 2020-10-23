@@ -93,7 +93,8 @@ class TestMocked(unittest.TestCase):
         mock.assert_called_with("pickle asmr")
 
     @mock.patch("flask_socketio.SocketIO.emit")
-    def test_on_connect(self, mock):
+    @mock.patch("main.emit_all_messages")
+    def test_on_connect(self, mock, mock1):
         on_connect()
 
     @mock.patch("flask_socketio.SocketIO.emit")
