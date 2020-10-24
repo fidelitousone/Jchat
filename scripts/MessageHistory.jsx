@@ -5,9 +5,11 @@ import Message from './Message'
 import MessageUrl from './MessageUrl'
 import MessageImage from './MessageImage'
 import validator from 'validator'
+import { useRef } from 'react'
 
 export default function MessageHistory () {
   const [messageList, setMessage] = React.useState([])
+  const messagesEndRef = useRef(null)
   var ImageRegex = /^https?:\/\/(?:[a-z0-9-]+\.)+[a-z]{2,6}(?:\/[^/#?]+)+\.(?:jpe?g|gif|png|bmp)$/i
 
   function ListMessages () {
@@ -23,11 +25,14 @@ export default function MessageHistory () {
     }
     return arry
   }
-
+  function ScrollToBottom () {
+    messagesEndRef.current.scrollIntoView({ behavior: 'smooth' })
+  }
   function NewMessages () {
     React.useEffect(() => {
       Socket.on('message receieved', (data) => {
         setMessage(data.messages)
+        ScrollToBottom()
       })
     }, [])
   }
@@ -37,6 +42,7 @@ export default function MessageHistory () {
   return (
     <div className="MessageHistory">
       {ListMessages()}
+      <div ref={messagesEndRef} />
     </div>
   )
 }
