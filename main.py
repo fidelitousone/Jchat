@@ -59,7 +59,10 @@ def emit_connected_users(channel):
 
 
 def handle_bot_invoke(string):
-    remove_invocation = string.split("!! ")[1]
+    try:
+        remove_invocation = string.split("!! ")[1]
+    except AttributeError:
+        return "Invalid invoke, bot did not execute!"
 
     bot = Bot()
     result = bot.execute_command(remove_invocation)

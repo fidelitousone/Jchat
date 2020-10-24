@@ -7,7 +7,10 @@ class Bot():
     UNKNOWN_COMMAND = "Unknown command, type !! help for a list of commands."
 
     def execute_command(self, command):
-        command_itself = command.split(" ")[0]
+        try:
+            command_itself = command.split(" ")[0]
+        except AttributeError:
+            return self.UNKNOWN_COMMAND
 
         if (command_itself == "about"):
             return "Just a simple chat bot, type !! help for some commands."

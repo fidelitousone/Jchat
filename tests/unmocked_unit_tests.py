@@ -38,6 +38,28 @@ class TestUnmocked(unittest.TestCase):
         expect = "Just a simple chat bot, type !! help for some commands."
         self.assertEqual(result, expect)
 
+    def test_bad_number_command(self):
+        result = self.bot.execute_command(5)
+        self.assertEqual(result, self.bot.UNKNOWN_COMMAND)
+
+    def test_bad_number_invoke(self):
+        result = handle_bot_invoke(69240)
+        expect = "Invalid invoke, bot did not execute!"
+        self.assertEqual(result, expect)
+
+    def test_extra_invoke_cmd(self):
+        result = self.bot.execute_command("!! !about")
+        self.assertEqual(result, self.bot.UNKNOWN_COMMAND)
+
+    def test_invoke_passed_to_bot_directly(self):
+        result = self.bot.execute_command("!!about")
+        self.assertEqual(result, self.bot.UNKNOWN_COMMAND)
+
+    def test_invoke_bot_list(self):
+        list_fixt = ["it", "really do", "be like that"]
+        result = self.bot.execute_command(list_fixt)
+        self.assertEqual(result, self.bot.UNKNOWN_COMMAND)
+
 
 if (__name__ == '__main__'):
     unittest.main()
