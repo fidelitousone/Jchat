@@ -9,7 +9,6 @@ from sqlalchemy.pool import NullPool
 
 user_count = 0
 
-#Flake 8 said long lines are bad. # noqa
 bot_image1 = "https://static-1.bitchute.com/live"
 bot_image2 = "/channel_images/ZBaPQppGwNka/od0Qb8vms4PDWRPACmGfjWDm_medium.jpg"
 bot_image = f"{bot_image1}{bot_image2}"
@@ -19,16 +18,16 @@ app = flask.Flask(__name__)
 socketio = SocketIO(app)
 socketio.init_app(app, cors_allowed_origins="*")
 
-dotenv_path = join(dirname(__file__), 'sql.env')
+dotenv_path = join(dirname(__file__), "sql.env")
 load_dotenv(dotenv_path)
 
 database_uri = os.environ["DATABASE_URL"]
 app.config["SQLALCHEMY_DATABASE_URI"] = database_uri
-app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {"poolclass": NullPool}
+app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {"poolclass": NullPool}
 
 db = flask_sqlalchemy.SQLAlchemy(app)
 db.app = app
-import models # noqa
+import models  # noqa
 
 
 def emit_all_messages(channel):
@@ -39,19 +38,13 @@ def emit_all_messages(channel):
         msg_data = {
             "username": sent_messages.username,
             "message": sent_messages.message,
-            "profile_picture": sent_messages.profilePicture
+            "profile_picture": sent_messages.profilePicture,
         }
         models.db.session.close()
         all_messages.append(msg_data)
     models.db.session.close()
 
-    socketio.emit(
-        channel,
-        {
-            "messages": all_messages
-        }
-
-    )
+    socketio.emit(channel, {"messages": all_messages})
 
 
 def emit_connected_users(channel):
@@ -77,13 +70,11 @@ def index():
         msgs.append(sent_messages.message)
         models.db.session.close()
 
-    return flask.render_template(
-        "index.html"
-    )
+    return flask.render_template("index.html")
     models.db.session.close()
 
 
-@socketio.on('connect')
+@socketio.on("connect")
 def on_connect():
     global user_count
     emit_all_messages("message receieved")
@@ -91,11 +82,11 @@ def on_connect():
         "user_connected",
         {
             "user_count": user_count,
-        }
+        },
     )
 
 
-@socketio.on('new message')
+@socketio.on("new message")
 def new_message(data):
 
     message = data["message"]
@@ -105,7 +96,7 @@ def new_message(data):
     db.session.add(models.Messages(username, message, pfp))
     db.session.commit()
     models.db.session.close()
-    if (message.startswith("!! ")):
+    if message.startswith("!! "):
         botstr = message
 
         bot_return = handle_bot_invoke(botstr)
@@ -118,7 +109,7 @@ def new_message(data):
     emit_all_messages("message receieved")
 
 
-@socketio.on('user_logged_in')
+@socketio.on("user_logged_in")
 def new_user(data):
     global user_count
     user_count += 1
@@ -127,7 +118,7 @@ def new_user(data):
         "user_connected",
         {
             "user_count": user_count,
-        }
+        },
     )
 
 
@@ -135,20 +126,20 @@ def new_user(data):
 def on_disconnect():
     global user_count
     user_count -= 1
-    if (user_count < 0):
+    if user_count < 0:
         user_count = 0
     socketio.emit(
         "user_disconnected",
         {
             "user_count": user_count,
-        }
+        },
     )
 
 
-if (__name__ == "__main__"):
+if __name__ == "__main__":
     socketio.run(
         app,
         debug=True,
         port=int(os.getenv("PORT", 8080)),
-        host=os.getenv("IP", "0.0.0.0")
+        host=os.getenv("IP", "0.0.0.0"),
     )

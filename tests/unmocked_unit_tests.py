@@ -1,12 +1,12 @@
 import unittest
 import sys
+
 sys.path.append(".")
-from Bot import Bot # noqa
-from main import handle_bot_invoke # noqa
+from Bot import Bot  # noqa
+from main import handle_bot_invoke  # noqa
 
 
 class TestUnmocked(unittest.TestCase):
-
     def setUp(self):
         self.bot = Bot()
 
@@ -61,5 +61,5 @@ class TestUnmocked(unittest.TestCase):
         self.assertEqual(result, self.bot.UNKNOWN_COMMAND)
 
 
-if (__name__ == '__main__'):
+if __name__ == "__main__":
     unittest.main()

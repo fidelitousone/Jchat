@@ -3,53 +3,42 @@ from unittest import mock
 from freezegun import freeze_time
 import json
 import sys
+
 sys.path.append(".")
-from Bot import Bot # noqa
-from main import emit_connected_users, new_message, new_user, on_connect
-from main import index, on_disconnect
+from Bot import Bot  # noqa
+from main import emit_connected_users, new_message, new_user, on_connect  # noqa
+from main import index, on_disconnect  # noqa
 
 
 class TestMocked(unittest.TestCase):
     translated = "| kr4V3d d4 57RenGt]-[ 4N|) d4 k3R7aIN7y ()f Zt331"
     successful_response = {
-            "success": {
-                "total": 1
-            },
-            "contents": {
-                "translated": translated,
-                "text": "I craved the strength and the certainty of steel",
-                "translation": "leetspeak"
-            }
-        }
-
-    failed_response = {
-        "error": {
-            "code": 404,
-            "message": "Not Found"
-        }
+        "success": {"total": 1},
+        "contents": {
+            "translated": translated,
+            "text": "I craved the strength and the certainty of steel",
+            "translation": "leetspeak",
+        },
     }
+
+    failed_response = {"error": {"code": 404, "message": "Not Found"}}
 
     tmr = " hour exceeded."
     too_many_req = f"Too Many Requests: Rate limit of 5 requests per{tmr}"
     too_many_req2 = " Please wait for 15 minutes and 00 seconds."
     err_str = f"{too_many_req}{too_many_req2}"
-    overuse_response = {
-        "error": {
-            "code": 429,
-            "message": f"{err_str}"
-        }
-    }
+    overuse_response = {"error": {"code": 429, "message": f"{err_str}"}}
 
     front_end_resp = {
         "message": "look at the TOP of his head",
         "username": "ben_dover@gmail.com",
-        "profile_picture": "www.example.com"
+        "profile_picture": "www.example.com",
     }
 
     front_end_resp_bot = {
         "message": "!! help",
         "username": "ben_dover@gmail.com",
-        "profile_picture": "www.example.com"
+        "profile_picture": "www.example.com",
     }
 
     failed_message = json.dumps(failed_response)
@@ -120,5 +109,5 @@ class TestMocked(unittest.TestCase):
         index()
 
 
-if (__name__ == '__main__'):
+if __name__ == "__main__":
     unittest.main()
