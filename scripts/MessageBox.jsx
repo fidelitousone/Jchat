@@ -12,7 +12,6 @@ export default function MessageBox () {
 
   function handleChange (event) {
     setText(event.target.value)
-    console.log(text)
   }
 
   function handleSubmit (event) {
@@ -25,7 +24,6 @@ export default function MessageBox () {
       }
     )
 
-    console.log(text)
     setText('')
     event.preventDefault()
   }
