@@ -48,9 +48,22 @@ React chat application with a python backend.
 * `psql`
 * `create user some_username_here superuser password 'some_unique_new_password_here';`
 
+### Running locally
+* clone this repo `https://github.com/NJIT-CS490/project2-m3-js843.git`
+* cd `https://github.com/NJIT-CS490/project2-m3-js843.git`
+* `npm install`
+* `npm run watch` Open a separate terminal and do this
+* `python -m venv .venv`
+* `pip install -r requirements.txt`
+* touch `sql.env` Fill it with: DATABASE_URL='postgresql://{YOUR_USERNAME}:{YOUR_PASSWORD}@localhost/postgres'
+* `python main.py`
+* navigate to URL `localhost:8080`
+* If you are using cloud9, navigate to the preview running application tab
+* Refresh with ctrl-shift-r 
+
 ### Deployment
 * Make a heroku account if you don't already have one!!!
-* clone this repo `https://github.com/NJIT-CS490/project2-m1-js843.git`
+* clone this repo `https://github.com/NJIT-CS490/project2-m3-js843.git`
 * `cd project2-m1-js843`
 * `heroku login -i`
 * `heroku create`
@@ -61,6 +74,14 @@ React chat application with a python backend.
 * `heroku pg:push postgres DATABASE_URL` this is the password you use to log into the db
 * `git push heroku master`
 * Click on the link deployment message gives then use the app.
+
+### Setting up Continuous Integration
+* Make a CircleCI Account
+* Connect your Github account to CircleCI
+* Go to Dashboard
+* Set up CI for this project
+* Get your heroku API key from heroku
+* add it as an environment variable in your project
 
 ## Technical Difficulties
 ### Hooking up SocketIO from the front end to the backend.
