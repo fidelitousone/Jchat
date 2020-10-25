@@ -18,6 +18,9 @@ jobs:
           command: python ./tests/mocked_unit_tests.py
           name: Mocked Unit Tests
       - run:
+          command: nvm install 7
+          name: Install node
+      - run:
           command: npm install
           name: Install node modules
       - run:
