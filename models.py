@@ -1,4 +1,5 @@
 from main import db
+# pylint: disable=no-member
 
 
 class Messages(db.Model):

@@ -1,17 +1,24 @@
-import flask
+from os.path import join, dirname
 import os
+import flask
 from flask_socketio import SocketIO
 import flask_sqlalchemy
 from dotenv import load_dotenv
-from os.path import join, dirname
-from Bot import Bot
 from sqlalchemy.pool import NullPool
+from Bot import Bot
+# pylint: disable=no-member
+# pylint: disable=missing-function-docstring
+# pylint: disable=invalid-envvar-default
+# pylint: disable=global-statement
+# pylint: disable=no-absolute-import
 
 user_count = 0
 
-bot_image1 = "https://static-1.bitchute.com/live"
-bot_image2 = "/channel_images/ZBaPQppGwNka/od0Qb8vms4PDWRPACmGfjWDm_medium.jpg"
-bot_image = f"{bot_image1}{bot_image2}"
+
+BOT_IMAGE = """
+https://static-1.bitchute.com/live/channel_images/
+ZBaPQppGwNka/od0Qb8vms4PDWRPACmGfjWDm_medium.jpg
+"""
 
 
 app = flask.Flask(__name__)
@@ -24,10 +31,11 @@ load_dotenv(dotenv_path)
 database_uri = os.environ["DATABASE_URL"]
 app.config["SQLALCHEMY_DATABASE_URI"] = database_uri
 app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {"poolclass": NullPool}
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
 
 db = flask_sqlalchemy.SQLAlchemy(app)
 db.app = app
-import models  # noqa
+import models  # noqa # pylint: disable=wrong-import-position
 
 
 def emit_all_messages(channel):
@@ -71,7 +79,6 @@ def index():
         models.db.session.close()
 
     return flask.render_template("index.html")
-    models.db.session.close()
 
 
 @socketio.on("connect")
@@ -101,7 +108,7 @@ def new_message(data):
 
         bot_return = handle_bot_invoke(botstr)
 
-        db.session.add(models.Messages("BOT", bot_return, bot_image))
+        db.session.add(models.Messages("BOT", bot_return, BOT_IMAGE))
         models.db.session.close()
         db.session.commit()
         models.db.session.close()

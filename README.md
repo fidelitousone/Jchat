@@ -2,6 +2,8 @@
 
 React chat application with a python backend.
 
+[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+
 ## Table of Contents
 * [Technologies](#technologies)
 * [Setup](#setup)
