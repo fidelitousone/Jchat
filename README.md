@@ -1,4 +1,4 @@
-# project2-m3-js843
+# JChat 
 
 React chat application with a python backend.
 
@@ -49,8 +49,8 @@ React chat application with a python backend.
 * `create user some_username_here superuser password 'some_unique_new_password_here';`
 
 ### Running locally
-* clone this repo `https://github.com/NJIT-CS490/project2-m3-js843.git`
-* cd `https://github.com/NJIT-CS490/project2-m3-js843.git`
+* clone this repo `https://github.com/fidelitousone/Jchat.git`
+* cd `Jchat`
 * `npm install`
 * `npm run watch` Open a separate terminal and do this
 * `python -m venv .venv`
@@ -64,7 +64,7 @@ React chat application with a python backend.
 ### Deployment
 * Make a heroku account if you don't already have one!!!
 * clone this repo `https://github.com/NJIT-CS490/project2-m3-js843.git`
-* `cd project2-m1-js843`
+* `cd Jchat`
 * `heroku login -i`
 * `heroku create`
 * `heroku addons:create heroku-postgresql:hobby-dev`
